@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lebogang Monyebudi – Software Developer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2333;
+      --border: #30363d;
+      --accent: #2f81f7;
+      --accent2: #388bfd;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --tag-bg: #1f3158;
+      --tag-text: #79c0ff;
+      --green: #3fb950;
+      --orange: #d29922;
+      --purple: #a371f7;
+      --radius: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); text-decoration: underline; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(13,17,23,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center; justify-content: space-between;
+      height: 58px;
+    }
+    .nav-brand { font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.02em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* LAYOUT */
+    section { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; padding-top: 80px;
+    }
+    .hero-label {
+      font-size: 0.85rem; color: var(--accent); font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .hero-name {
+      font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; line-height: 1.1;
+      background: linear-gradient(135deg, #e6edf3 40%, #79c0ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1.2rem;
+    }
+    .hero-title { font-size: 1.2rem; color: var(--muted); margin-bottom: 1.6rem; }
+    .hero-summary {
+      font-size: 1rem; color: #c9d1d9; max-width: 640px;
+      line-height: 1.75; margin-bottom: 2.4rem;
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.65rem 1.4rem; border-radius: 6px;
+      font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; border: none; }
+    .btn-primary:hover { background: var(--accent2); text-decoration: none; color: #fff; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+    /* SECTION HEADING */
+    .section-heading { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .section-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.8rem; }
+    .section-line { width: 40px; height: 3px; background: var(--accent); border-radius: 2px; margin-bottom: 2.5rem; }
+
+    /* FILTER TABS */
+    .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.8rem; }
+    .filter-btn {
+      padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.82rem; font-weight: 500;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+    }
+
+    /* PROJECTS GRID */
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.2rem;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card.hidden { display: none; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem; }
+    .card-icon { font-size: 1.4rem; }
+    .card-badge {
+      font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.55rem;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .badge-ai { background: #2d1f6e; color: var(--purple); }
+    .badge-fullstack { background: #1a3a2a; color: var(--green); }
+    .badge-data { background: #3a2a1a; color: var(--orange); }
+    .card-links { display: flex; gap: 0.5rem; align-items: center; }
+    .card-link {
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.78rem; color: var(--muted);
+      background: var(--surface2); border: 1px solid var(--border);
+      padding: 0.22rem 0.55rem; border-radius: 4px; transition: all 0.2s;
+    }
+    .card-link:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+    .card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 1rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; }
+    .tag {
+      font-size: 0.73rem; font-weight: 500;
+      background: var(--tag-bg); color: var(--tag-text);
+      padding: 0.18rem 0.5rem; border-radius: 20px;
+    }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .skill-group {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem;
+    }
+    .skill-group-label {
+      font-size: 0.76rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.75rem;
+    }
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      font-size: 0.79rem; background: var(--surface2);
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.2rem 0.55rem; border-radius: 4px;
+    }
+
+    /* EXPERIENCE TIMELINE */
+    .timeline { display: flex; flex-direction: column; }
+    .timeline-item { display: flex; gap: 1.5rem; padding-bottom: 2.2rem; position: relative; }
+    .timeline-item:not(:last-child)::before {
+      content: ''; position: absolute; left: 7px; top: 20px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--accent); border: 3px solid var(--bg); flex-shrink: 0; margin-top: 4px;
+    }
+    .timeline-body { flex: 1; }
+    .timeline-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .timeline-company { font-size: 0.87rem; color: var(--accent); margin-bottom: 0.2rem; }
+    .timeline-date { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .timeline-body ul { padding-left: 1.2rem; }
+    .timeline-body li { font-size: 0.87rem; color: var(--muted); margin-bottom: 0.3rem; line-height: 1.65; }
+
+    /* CONTACT */
+    #contact { text-align: center; }
+    .contact-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 3rem 2rem;
+      max-width: 520px; margin: 0 auto;
+    }
+    .contact-card p { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .contact-links { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+    .contact-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1rem; border-radius: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      font-size: 0.87rem; color: var(--text); transition: border-color 0.2s;
+    }
+    .contact-item:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--border); text-align: center;
+      padding: 1.8rem; font-size: 0.82rem; color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      section { padding: 4rem 1.2rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-brand">LM</span>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-label">Software Developer</p>
+    <h1 class="hero-name">Lebogang<br>Monyebudi</h1>
+    <p class="hero-title">Python · Flask · React · FastAPI · .NET · SQL · AI/ML</p>
+    <p class="hero-summary">
+      I build production-grade web applications, business systems, and AI-powered platforms —
+      from CRMs and e-commerce stores to ETL pipelines and intelligent document agents.
+      Based in Johannesburg, South Africa. Open to freelance and full-time opportunities.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 010-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9z"/></svg>
+        View Projects
+      </a>
+      <a href="https://github.com/Lebogang224" target="_blank" class="btn btn-outline">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <h2 class="section-heading">Projects</h2>
+    <p class="section-sub">7 repositories · Full-stack, AI/ML, Data Engineering</p>
+    <div class="section-line"></div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ai">AI / ML</button>
+      <button class="filter-btn" data-filter="fullstack">Full-Stack</button>
+      <button class="filter-btn" data-filter="data">Data Engineering</button>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- Legal AI Agent -->
+      <div class="card" data-category="ai fullstack">
+        <div class="card-header">
+          <span class="card-icon">⚖️</span>
+          <div class="card-links">
+            <span class="card-badge badge-ai">AI · Featured</span>
+            <a href="https://github.com/Lebogang224/legal-ai-agent" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+        <h3 class="card-title">Legal AI Agent</h3>
+        <p class="card-desc">
+          AI-powered legal document Q&amp;A platform. Upload PDFs, ask questions in plain language,
+          and get answers with page-level citations. Built with FAISS vector search, LangChain,
+          Claude AI, Redis caching, JWT auth, and a React 18 drag-and-drop interface.
+          15 REST endpoints, async document processing, and role-based access.
+        </p>
+        <div class="tags">
+          <span class="tag">FastAPI</span><span class="tag">LangChain</span>
+          <span class="tag">Claude AI</span><span class="tag">FAISS</span>
+          <span class="tag">React 18</span><span class="tag">Redis</span>
+          <span class="tag">AWS S3</span><span class="tag">PostgreSQL</span>
+          <span class="tag">JWT</span>
+        </div>
+      </div>
+
+      <!-- Meter IQ -->
+      <div class="card" data-category="fullstack">
+        <div class="card-header">
+          <span class="card-icon">⚡</span>
+          <div class="card-links">
+            <span class="card-badge badge-fullstack">Full-Stack</span>
+            <a href="https://github.com/Lebogang224/meter-iq-backend" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Backend
+            </a>
+            <a href="https://github.com/Lebogang224/meter-iq-frontend" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Frontend
+            </a>
+          </div>
+        </div>
+        <h3 class="card-title">Meter IQ – Utility Management Platform</h3>
+        <p class="card-desc">
+          Enterprise utility management platform for tracking meter readings, consumption,
+          billing, and automated alerts. Separate frontend and backend repos with REST API,
+          authentication, and operational reporting for small-to-medium businesses.
+        </p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Flask</span>
+          <span class="tag">SQLite</span><span class="tag">REST API</span>
+          <span class="tag">JWT</span><span class="tag">HTML/CSS</span>
+          <span class="tag">Power BI</span>
+        </div>
+      </div>
+
+      <!-- HS Leads -->
+      <div class="card" data-category="fullstack">
+        <div class="card-header">
+          <span class="card-icon">📋</span>
+          <div class="card-links">
+            <span class="card-badge badge-fullstack">Full-Stack</span>
+            <a href="https://github.com/Lebogang224/hs-leads" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+        <h3 class="card-title">HS Leads – Lead Management CRM</h3>
+        <p class="card-desc">
+          Web-based CRM for managing sales leads, client follow-ups, and pipeline tracking.
+          Built for a real estate referral business with an admin dashboard,
+          JWT authentication, and a clean interface for tracking lead status through the full sales cycle.
+        </p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Flask</span>
+          <span class="tag">SQLite</span><span class="tag">JWT</span>
+          <span class="tag">HTML/CSS</span><span class="tag">JavaScript</span>
+        </div>
+      </div>
+
+      <!-- Orders Pipeline -->
+      <div class="card" data-category="data">
+        <div class="card-header">
+          <span class="card-icon">🔁</span>
+          <div class="card-links">
+            <span class="card-badge badge-data">Data Engineering</span>
+            <a href="https://github.com/Lebogang224/orders-pipeline" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+        <h3 class="card-title">Orders Pipeline – ETL Data Engineering</h3>
+        <p class="card-desc">
+          End-to-end ETL pipeline for e-commerce order data. Ingests messy CSV and JSONL files,
+          validates and cleans records, bulk-loads into PostgreSQL using the COPY command,
+          and quarantines invalid rows with rejection reasons. Includes analytics views,
+          CLI interface, pytest suite, and optional AI-generated narrative reports via LangChain + Groq.
+        </p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">pandas</span>
+          <span class="tag">PostgreSQL</span><span class="tag">psycopg v3</span>
+          <span class="tag">pytest</span><span class="tag">LangChain</span>
+          <span class="tag">CLI</span><span class="tag">YAML</span>
+        </div>
+      </div>
+
+      <!-- Ecommerce -->
+      <div class="card" data-category="fullstack">
+        <div class="card-header">
+          <span class="card-icon">🛒</span>
+          <div class="card-links">
+            <span class="card-badge badge-fullstack">Full-Stack</span>
+            <a href="https://github.com/Lebogang224/ecommerce" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Frontend
+            </a>
+            <a href="https://github.com/Lebogang224/ecommerce_project" target="_blank" class="card-link">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              Backend
+            </a>
+          </div>
+        </div>
+        <h3 class="card-title">E-Commerce Store</h3>
+        <p class="card-desc">
+          Full-featured online store with product listings, shopping cart, checkout flow,
+          and order management. Separate frontend and backend repos.
+          Built for a food business client with a clean, mobile-responsive interface.
+        </p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Flask</span>
+          <span class="tag">PostgreSQL</span><span class="tag">HTML/CSS</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+
+      <!-- MEOP -->
+      <div class="card" data-category="fullstack">
+        <div class="card-header">
+          <span class="card-icon">🏭</span>
+          <div class="card-links">
+            <span class="card-badge badge-fullstack">Enterprise</span>
+          </div>
+        </div>
+        <h3 class="card-title">MEOP Shutdown Planning System</h3>
+        <p class="card-desc">
+          Enterprise system for coordinating equipment shutdown planning at AB InBev.
+          Features role-based access control, real-time status tracking, team communication,
+          and Power BI dashboards for operational performance reporting.
+          Built with C#, .NET, MVC, and SQL on the backend.
+        </p>
+        <div class="tags">
+          <span class="tag">C#</span><span class="tag">.NET / MVC</span>
+          <span class="tag">SQL Server</span><span class="tag">Power BI</span>
+          <span class="tag">Python</span><span class="tag">Flask</span>
+          <span class="tag">React</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <h2 class="section-heading">Skills</h2>
+    <div class="section-line"></div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-label">Languages</div>
+        <div class="skill-chips">
+          <span class="chip">Python</span><span class="chip">JavaScript</span>
+          <span class="chip">C#</span><span class="chip">Java</span>
+          <span class="chip">VB.Net</span><span class="chip">HTML</span><span class="chip">CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Frameworks & APIs</div>
+        <div class="skill-chips">
+          <span class="chip">Flask</span><span class="chip">FastAPI</span>
+          <span class="chip">React 18</span><span class="chip">.NET / MVC</span>
+          <span class="chip">REST APIs</span><span class="chip">JWT Auth</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">AI / ML</div>
+        <div class="skill-chips">
+          <span class="chip">LangChain</span><span class="chip">FAISS</span>
+          <span class="chip">Claude (Anthropic)</span><span class="chip">Groq</span>
+          <span class="chip">Tesseract OCR</span><span class="chip">Vector Search</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Databases</div>
+        <div class="skill-chips">
+          <span class="chip">PostgreSQL</span><span class="chip">SQL Server</span>
+          <span class="chip">SQLite</span><span class="chip">Redis</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Tools & Cloud</div>
+        <div class="skill-chips">
+          <span class="chip">Power BI</span><span class="chip">Git</span>
+          <span class="chip">Docker</span><span class="chip">AWS S3</span>
+          <span class="chip">Render</span><span class="chip">GitHub Actions</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Practices</div>
+        <div class="skill-chips">
+          <span class="chip">ETL Pipelines</span><span class="chip">System Design</span>
+          <span class="chip">Agile</span><span class="chip">CI/CD</span>
+          <span class="chip">Data Integration</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <h2 class="section-heading">Experience</h2>
+    <div class="section-line"></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-body">
+          <div class="timeline-title">Freelance Software Developer</div>
+          <div class="timeline-company">Independent · Clients include Bethel Digital Pty Ltd</div>
+          <div class="timeline-date">Apr 2023 – Present · Johannesburg, South Africa</div>
+          <ul>
+            <li>Built AI-powered, full-stack, and data engineering systems for clients across multiple industries.</li>
+            <li>Designed RESTful and FastAPI backends with PostgreSQL, Redis, AWS S3, and JWT authentication.</li>
+            <li>Delivered React 18 frontends, ETL pipelines, CRM platforms, and utility management tools.</li>
+            <li>Integrated LangChain, FAISS, and Claude AI for intelligent document processing applications.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-body">
+          <div class="timeline-title">Solutions Tech Analyst</div>
+          <div class="timeline-company">AB InBev</div>
+          <div class="timeline-date">Nov 2020 – Apr 2023 · Sandton, South Africa</div>
+          <ul>
+            <li>Led development of the MEOP Planning System for enterprise equipment shutdown coordination.</li>
+            <li>Built backend systems in C#, .NET, MVC, and SQL with Power BI dashboards.</li>
+            <li>Improved real-time data synchronisation and operational reporting visibility.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-body">
+          <div class="timeline-title">Administrative Support</div>
+          <div class="timeline-company">Tshwane University of Technology</div>
+          <div class="timeline-date">Jan 2016 – Jan 2019 · Pretoria, South Africa</div>
+          <ul>
+            <li>IT support, data management, and system maintenance for faculty platforms.</li>
+            <li>Handled user accounts, academic software setup, and report generation.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2 class="section-heading" style="text-align:center">Get In Touch</h2>
+    <div class="section-line" style="margin: 0.4rem auto 2.5rem"></div>
+    <div class="contact-card">
+      <p>Open to freelance projects, contract roles, and full-time opportunities.<br>Feel free to reach out.</p>
+      <div class="contact-links">
+        <a href="mailto:monyebudi4@gmail.com" class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.75 2A1.75 1.75 0 000 3.75v.736a.75.75 0 000 .027V12.25c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0016 12.25V3.75A1.75 1.75 0 0014.25 2H1.75zM14.5 4.07v-.32a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25v.32L8 7.88l6.5-3.81zm-13 1.74l6.23 3.65a.75.75 0 00.54 0L14.5 5.81v6.44a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V5.81z"/></svg>
+          monyebudi4@gmail.com
+        </a>
+        <a href="https://github.com/Lebogang224" target="_blank" class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          github.com/Lebogang224
+        </a>
+        <a href="tel:+27656990809" class="contact-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.885.511a1.745 1.745 0 012.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 00.178.643l2.457 2.457a.678.678 0 00.644.178l2.189-.547a1.745 1.745 0 011.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 01-7.01-4.42 18.634 18.634 0 01-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
+          065 699 0809
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Lebogang Monyebudi · Johannesburg, South Africa · <a href="https://github.com/Lebogang224" target="_blank">github.com/Lebogang224</a></p>
+  </footer>
+
+  <script>
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.card').forEach(card => {
+          if (filter === 'all' || card.dataset.category.includes(filter)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
